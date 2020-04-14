@@ -139,6 +139,11 @@ export default class Slider extends PureComponent {
     trackStyle: ViewPropTypes.style,
 
     /**
+     * Sets an image for the track.
+     */
+    trackImage: Image.propTypes.source,
+
+    /**
      * The style applied to the thumb.
      */
     thumbStyle: ViewPropTypes.style,
@@ -226,6 +231,7 @@ export default class Slider extends PureComponent {
       styles,
       style,
       trackStyle,
+      trackImage,
       thumbStyle,
       debugTouchArea,
       onValueChange,
@@ -260,10 +266,16 @@ export default class Slider extends PureComponent {
         <View
           style={[{backgroundColor: maximumTrackTintColor,}, mainStyles.track, trackStyle]}
           renderToHardwareTextureAndroid={true}
-          onLayout={this._measureTrack} />
-        <Animated.View
-          renderToHardwareTextureAndroid={true}
-          style={[mainStyles.track, trackStyle, minimumTrackStyle]} />
+          onLayout={this._measureTrack} >
+          {trackImage ? <Image
+            style={trackStyle}
+            source={trackImage}
+            resizeMode="stretch"/>
+            : <Animated.View
+              renderToHardwareTextureAndroid={true}
+              style={[mainStyles.track, trackStyle, minimumTrackStyle]} />
+            }
+        </View>
         <Animated.View
           onLayout={this._measureThumb}
           renderToHardwareTextureAndroid={true}

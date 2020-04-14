@@ -1,7 +1,7 @@
 {
   "name": "react-native-smooth-slider",
   "version": "0.11.0",
-  "description": "A pure JavaScript <Slider /> component for react-native",
+  "description": "A pure JavaScript <Slider /> support trackImage",
   "main": "src/Slider.js",
   "files": [
     "src"
