@@ -87,6 +87,12 @@ animateTransitions    | bool     | Yes      | false                     | Set to
 animationType         | string   | Yes      | 'timing'                  | Set to 'spring' or 'timing' to use one of those two types of animations with the default [animation properties](https://facebook.github.io/react-native/docs/animations.html).
 animationConfig       | object   | Yes      | undefined                 | Used to configure the animation parameters.  These are the same parameters in the [Animated library](https://facebook.github.io/react-native/docs/animations.html).
 
+## Methods
+
+    setValue(value)
+
+In some use case e.g. "tension rod", it's more convenient to use method instead of prop to restore original positon of the tension rod.
+
 
 ---
 

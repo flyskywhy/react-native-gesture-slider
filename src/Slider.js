@@ -256,19 +256,23 @@ export default class Slider extends PureComponent {
     var newValue = nextProps.value;
 
     if (this.props.value !== newValue) {
+        this.setValue(newValue);
+    }
+  };
+
+  setValue = (value: number) => {
       if (!this.isMoving && this.state.containerSize.width) {
-        this._translateX.setOffset(this.props.vertical ? this.state.containerSize.width - this._getThumbCenter(newValue) : this._getThumbCenter(newValue));
+        this._translateX.setOffset(this.props.vertical ? this.state.containerSize.width - this._getThumbCenter(value) : this._getThumbCenter(value));
         this._translateX.setValue(0);
       }
 
       if (this.props.animateTransitions) {
-        this._setCurrentValueAnimated(newValue);
+        this._setCurrentValueAnimated(value);
       }
       else {
-        this._setCurrentValue(newValue);
+        this._setCurrentValue(value);
       }
-    }
-  };
+  }
 
   render() {
     var {
