@@ -62,7 +62,9 @@ export default class Slider extends PureComponent {
     this._lastOffsetX = 0;
     this._onGestureEvent = Animated.event(
       [{
-        nativeEvent: {
+        nativeEvent: props.vertical ? {
+          translationY: this._translateX,
+        } :  {
           translationX: this._translateX,
         },
       }], {
@@ -79,7 +81,7 @@ export default class Slider extends PureComponent {
       this._handlePanResponderGrant(x);
     } else if (event.nativeEvent.oldState === State.ACTIVE) {
       // This synthetic event is reused for performance reasons, so save it first
-      let translationX = event.nativeEvent.translationX;
+      let translationX = this.props.vertical ? -event.nativeEvent.translationY : event.nativeEvent.translationX;
       this._handlePanResponderEnd(translationX);
     } else if (event.nativeEvent.state === State.FAILED && event.nativeEvent.oldState === State.BEGAN) {
       // Just tap not move on the slider, will comes here
@@ -191,6 +193,11 @@ export default class Slider extends PureComponent {
     thumbImage: Image.propTypes.source,
 
     /**
+     * Set this to true to be a vertical slider.
+     */
+    vertical: PropTypes.bool,
+
+    /**
      * Set this to true to visually see the thumb touch rect in green.
      */
     debugTouchArea: PropTypes.bool,
@@ -220,6 +227,7 @@ export default class Slider extends PureComponent {
     maximumTrackTintColor: '#b3b3b3',
     thumbTintColor: '#343434',
     thumbTouchSize: {width: 40, height: 40},
+    vertical: false,
     debugTouchArea: false,
     animationType: 'timing'
   };
@@ -249,7 +257,7 @@ export default class Slider extends PureComponent {
 
     if (this.props.value !== newValue) {
       if (!this.isMoving && this.state.containerSize.width) {
-        this._translateX.setOffset(this._getThumbCenter(newValue));
+        this._translateX.setOffset(this.props.vertical ? this.state.containerSize.width - this._getThumbCenter(newValue) : this._getThumbCenter(newValue));
         this._translateX.setValue(0);
       }
 
@@ -275,6 +283,7 @@ export default class Slider extends PureComponent {
       trackStyle,
       trackImage,
       thumbStyle,
+      vertical,
       debugTouchArea,
       onValueChange,
       thumbTouchSize,
@@ -303,12 +312,24 @@ export default class Slider extends PureComponent {
 
     var touchOverflowStyle = this._getTouchOverflowStyle();
 
+    var translate = this._translateX.interpolate({
+      inputRange: [0, containerSize.width || 200],
+      outputRange: [0, containerSize.width || 200],
+      extrapolate: "clamp",
+    });
+
+    let transformStyle = {};
+    if (vertical) {
+      transformStyle.transform = [{rotate: '-90deg'}];
+      translate = Animated.multiply(Animated.add(translate, -containerSize.width), -1)
+    }
+
     let thumbMarginLeftStyle = {
       marginLeft: -thumbSize.width / 2,
     };
 
     return (
-      <View {...other} style={[mainStyles.container, style]} onLayout={this._measureContainer}>
+      <View {...other} style={[mainStyles.container, style, transformStyle]} onLayout={this._measureContainer}>
         <View
           style={[{backgroundColor: maximumTrackTintColor,}, mainStyles.track, trackStyle]}
           renderToHardwareTextureAndroid={true}
@@ -330,12 +351,8 @@ export default class Slider extends PureComponent {
             mainStyles.thumb, thumbStyle, thumbMarginLeftStyle,
             {
               transform: [
-                { translateX: this._translateX.interpolate({
-                      inputRange: [0, containerSize.width || 200],
-                      outputRange: [0, containerSize.width || 200],
-                      extrapolate: "clamp",
-                    })},
-                { translateY: 0 }
+                { translateX: translate},
+                { translateY: 0},
               ],
               ...valueVisibleStyle
             }
@@ -390,7 +407,7 @@ export default class Slider extends PureComponent {
       this._lastOffsetX = this.state.containerSize.width;
     }
 
-    this._translateX.setOffset(this._lastOffsetX);
+    this._translateX.setOffset(this.props.vertical ? this.state.containerSize.width - this._lastOffsetX : this._lastOffsetX);
     this._translateX.setValue(0);
 
     this._fireChangeEvent('onSlidingStart');
@@ -399,13 +416,15 @@ export default class Slider extends PureComponent {
   _handlePanResponderMove = (e: Object) => {
     // This synthetic event is reused for performance reasons, so save it first
     let translationX = e.nativeEvent.translationX;
+    let translationY = e.nativeEvent.translationY;
 
     if (this.props.disabled) {
       return;
     }
     this.isMoving = true;
 
-    let offset = this._lastOffsetX + translationX;
+    let translation = this.props.vertical ? -translationY : translationX;
+    let offset = this._lastOffsetX + translation;
     if (offset < 0) {
       offset = 0;
     } else if (offset > this.state.containerSize.width) {
@@ -440,7 +459,7 @@ export default class Slider extends PureComponent {
 
     let value = this._getValue(this._lastOffsetX);
     let offset = this._getThumbCenter(value);
-    this._translateX.setOffset(offset);
+    this._translateX.setOffset(this.props.vertical ? this.state.containerSize.width - offset : offset);
     this._translateX.setValue(0);
 
     this._setCurrentValue(value);
@@ -478,7 +497,7 @@ export default class Slider extends PureComponent {
         allMeasured: true,
       }, () => {
         let offset = this._getThumbCenter(this.props.value);
-        this._translateX.setOffset(offset);
+        this._translateX.setOffset(this.props.vertical ? this.state.containerSize.width - offset : offset);
         this._translateX.setValue(0);
         this._lastOffsetX = offset;
       })

@@ -5,7 +5,7 @@
 [![npm licence](http://img.shields.io/npm/l/react-native-smooth-slider.svg?style=flat-square)](https://npmjs.org/package/react-native-smooth-slider "View this project on npm")
 [![Platform](https://img.shields.io/badge/platform-ios%20%7C%20android-989898.svg?style=flat-square)](https://npmjs.org/package/react-native-smooth-slider "View this project on npm")
 
-<Slider /> support trackImage and smoothed by react-native-gesture-handler.
+A react-native-gesture-handler smoothed <Slider /> , also support trackImage and vertical.
 
 <img src="https://raw.githubusercontent.com/flyskywhy/react-native-smooth-slider/master/Screenshots/basic@2x.png" width="375">
 <img src="https://raw.githubusercontent.com/flyskywhy/react-native-smooth-slider/master/Screenshots/basic_android_xxhdpi.png" width="360">
@@ -81,6 +81,7 @@ trackStyle            | [style](http://facebook.github.io/react-native/docs/view
 trackImage            | [source](http://facebook.github.io/react-native/docs/image.html#source)    | Yes      |                           | Sets an image for the track.
 thumbStyle            | [style](http://facebook.github.io/react-native/docs/view.html#style)    | Yes      |                           | The style applied to the thumb
 thumbImage            | [source](http://facebook.github.io/react-native/docs/image.html#source)    | Yes      |                           | Sets an image for the thumb.
+vertical              | bool     | Yes      | false                     | Set this to true to be a vertical slider.
 debugTouchArea        | bool     | Yes      | false                     | Set this to true to visually see the thumb touch rect in green.
 animateTransitions    | bool     | Yes      | false                     | Set to true if you want to use the default 'spring' animation
 animationType         | string   | Yes      | 'timing'                  | Set to 'spring' or 'timing' to use one of those two types of animations with the default [animation properties](https://facebook.github.io/react-native/docs/animations.html).
