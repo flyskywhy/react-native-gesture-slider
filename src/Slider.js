@@ -151,7 +151,14 @@ export default class Slider extends PureComponent {
     ),
 
     /**
-     * Callback continuously called while the user is dragging the slider.
+     * Prevent onValueChange if velocityX or velocityY (vertical is true)
+     * of nativeEvent is over the moveVelocityThreshold.
+     */
+    moveVelocityThreshold: PropTypes.number,
+
+    /**
+     * Callback continuously called while the user is dragging the slider
+     * and the dragging movement speed is below the moveVelocityThreshold.
      */
     onValueChange: PropTypes.func,
 
@@ -228,6 +235,7 @@ export default class Slider extends PureComponent {
     thumbTintColor: '#343434',
     thumbTouchSize: {width: 40, height: 40},
     vertical: false,
+    moveVelocityThreshold: 2000,
     debugTouchArea: false,
     animationType: 'timing'
   };
@@ -421,6 +429,8 @@ export default class Slider extends PureComponent {
     // This synthetic event is reused for performance reasons, so save it first
     let translationX = e.nativeEvent.translationX;
     let translationY = e.nativeEvent.translationY;
+    let velocityX = e.nativeEvent.velocityX;
+    let velocityY = e.nativeEvent.velocityY;
 
     if (this.props.disabled) {
       return;
@@ -438,7 +448,10 @@ export default class Slider extends PureComponent {
     let newValue = this._getValue(offset);
     if (this._getCurrentValue() !== newValue) {
       this._setCurrentValue(newValue);
-      this._fireChangeEvent('onValueChange');
+      let velocity = Math.abs(this.props.vertical ? velocityY : velocityX);
+      if (velocity < this.props.moveVelocityThreshold) {
+        this._fireChangeEvent('onValueChange');
+      }
     }
   };
 
