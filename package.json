@@ -18,6 +18,10 @@
       "url": "https://github.com/flyskywhy"
     }
   ],
+  "funding": {
+    "type": "individual",
+    "url": "Alipay: flyskywhy@gmail.com Eth: 0xd02fa2738dcbba988904b5a9ef123f7a957dbb3e"
+  },
   "keywords": [
     "react-component",
     "react-native",
