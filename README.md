@@ -5,7 +5,7 @@
 [![npm licence](http://img.shields.io/npm/l/react-native-smooth-slider.svg?style=flat-square)](https://npmjs.org/package/react-native-smooth-slider "View this project on npm")
 [![Platform](https://img.shields.io/badge/platform-ios%20%7C%20android-989898.svg?style=flat-square)](https://npmjs.org/package/react-native-smooth-slider "View this project on npm")
 
-A pure JavaScript `<Slider>` support trackImage.
+<Slider /> support trackImage and smoothed by react-native-gesture-handler.
 
 <img src="https://raw.githubusercontent.com/flyskywhy/react-native-smooth-slider/master/Screenshots/basic@2x.png" width="375">
 <img src="https://raw.githubusercontent.com/flyskywhy/react-native-smooth-slider/master/Screenshots/basic_android_xxhdpi.png" width="360">
@@ -18,15 +18,7 @@ It is a drop-in replacement for [Slider](http://facebook.github.io/react-native/
 npm i --save react-native-smooth-slider
 ```
 
-**Note:** I try to maintain backward compatibility of this component with previous versions of React Native, but due to the nature of the platform, and the existence of breaking changes between releases, it is possible that you need to use a specific version of this component to support the exact version of React Native you are using. See the following table:
-
-| React Native version(s) | Supporting react-native-smooth-slider version(s) |
-|-------------------------|--------------------------------------------------|
-| <0.25.0                 | <0.7.0                                           |
-| v0.25.x                 | v0.7.x                                           |
-| v0.26.0+                | v0.8.x                                           |
-| v0.43.0+                | v0.10.x                                          |
-| v0.44.0+                | v0.11.x                                          |
+And need install react-native-gesture-handler (1.1.0+ e.g. 1.2.2 for RN 0.57.2+ , or latest for RN 0.60.0+) by yourself.
 
 ## Usage
 
