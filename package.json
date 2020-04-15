@@ -1,6 +1,6 @@
 {
   "name": "react-native-smooth-slider",
-  "version": "0.12.0",
+  "version": "1.0.0",
   "description": "<Slider /> support trackImage and smoothed by react-native-gesture-handler",
   "main": "src/Slider.js",
   "files": [
