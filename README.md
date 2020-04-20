@@ -94,6 +94,12 @@ animationConfig       | object   | Yes      | undefined                 | Used t
 
 In some use case e.g. "tension rod", it's more convenient to use method instead of prop to restore original positon of the tension rod.
 
+## Sponsor
+
+Alipay: flyskywhy@gmail.com
+
+ETH: 0xd02fa2738dcbba988904b5a9ef123f7a957dbb3e
+
 
 ---
 
