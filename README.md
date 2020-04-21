@@ -92,7 +92,9 @@ animationConfig       | object   | Yes      | undefined                 | Used t
 
     setValue(value)
 
-In some use case e.g. "tension rod", it's more convenient to use method instead of prop to restore original positon of the tension rod.
+In some use case e.g. "tension rod", it's more convenient to use method instead of prop to restore original positon of the tension rod. Below is a vertical tension rod example screenshot.
+
+<img src="https://raw.githubusercontent.com/flyskywhy/react-native-smooth-slider/master/Screenshots/vertical_tension_rod.png" width="75">
 
 ## Sponsor
 
