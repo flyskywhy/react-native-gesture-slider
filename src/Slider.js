@@ -11,6 +11,7 @@ import {
     StyleSheet,
     View,
     ViewPropTypes,
+    Text,
 } from 'react-native';
 
 import {
@@ -145,6 +146,16 @@ export default class Slider extends PureComponent {
         onValueChange: PropTypes.func,
 
         /**
+         * Callback when the slider component is rendered
+         */
+        onReady: PropTypes.func,
+
+        /**
+         * This is format the output of the current value
+         */
+        thumbValueFormatter: PropTypes.func,
+
+        /**
          * Callback called when the user starts changing the value (e.g. when
          * the slider is pressed).
          */
@@ -200,6 +211,26 @@ export default class Slider extends PureComponent {
          * Used to configure the animation parameters.  These are the same parameters in the Animated library.
          */
         animationConfig: PropTypes.object,
+
+        /**
+         * The style applied to the goal thumb.
+         */
+        goalThumbStyle: ViewPropTypes.style,
+
+        /**
+         * The style applied to the floating thumb.
+         */
+        thumbFloatStyle: ViewPropTypes.style,
+
+        /**
+         * The indicates whether to show or not show the curent value of the slider on the thumb
+         */
+        showThumbValue: PropTypes.bool,
+
+        /**
+         * This is the vertical offset of the floating thumb
+         */
+        floatThumbOffset: PropTypes.number,
     };
 
     static defaultProps = {
@@ -216,7 +247,8 @@ export default class Slider extends PureComponent {
         },
         vertical: false,
         moveVelocityThreshold: 2000,
-        animationType: 'timing'
+        animationType: 'timing',
+        floatThumbOffset: -35,
     };
 
     state = {
@@ -232,8 +264,18 @@ export default class Slider extends PureComponent {
             width: 0,
             height: 0
         },
+        goalThumbSize: {
+            width: 0,
+            height: 0
+        },
+        floatThumbSize: {
+            width: 0,
+            height: 0
+        },
         allMeasured: false,
         value: new Animated.Value(this.props.value),
+        currentValue: this.props.thumbValueFormatter ? this.props.thumbValueFormatter(this.props.value) : this.props.value,
+        isMoving: false,
     };
 
     componentWillReceiveProps(nextProps) {
@@ -274,19 +316,29 @@ export default class Slider extends PureComponent {
             thumbTouchSize,
             animationType,
             animateTransitions,
+            goalThumbStyle,
+            showThumbValue,
+            thumbFloatStyle,
+            floatThumbOffset,
             ...other
         } = this.props;
+
         var {
             value,
             containerSize,
             thumbSize,
-            allMeasured
+            goalThumbSize,
+            floatThumbSize,
+            allMeasured,
+            currentValue,
+            isMoving,
         } = this.state;
+
         var mainStyles = styles || defaultStyles;
         var thumbCenter = value.interpolate({
             inputRange: [minimumValue, maximumValue],
             outputRange: [0, containerSize.width - thumbSize.width / 2],
-            //extrapolate: 'clamp',
+            extrapolate: 'clamp',
         });
         var valueVisibleStyle = {};
         if (!allMeasured) {
@@ -308,6 +360,7 @@ export default class Slider extends PureComponent {
             extrapolate: 'clamp',
         });
 
+
         var transformStyle = {};
         if (vertical) {
             transformStyle.transform = [{
@@ -320,10 +373,18 @@ export default class Slider extends PureComponent {
             marginLeft: -thumbSize.width / 2,
         };
 
+        var floatThumbMarginLeftStyle = {
+            marginLeft: -floatThumbSize.width / 2,
+        };
+
+        var goalThumbMarginLeftStyle = {
+            marginLeft: -goalThumbSize.width / 2,
+        };
+
         return (
             <View {...other} style={[mainStyles.container, style, transformStyle]} onLayout={this._measureContainer}>
                 <View
-                    style={[{backgroundColor: maximumTrackTintColor}, mainStyles.track, trackStyle]}
+                    style={[{backgroundColor: maximumTrackTintColor}, mainStyles.track, trackStyle, valueVisibleStyle]}
                     renderToHardwareTextureAndroid={true}
                     onLayout={this._measureTrack} >
                     {trackImage ? <Image
@@ -335,12 +396,47 @@ export default class Slider extends PureComponent {
                         style={[mainStyles.track, trackStyle, minimumTrackStyle]} />
                     }
                 </View>
+                {this.props.goal !==undefined && <Animated.View
+                    onLayout={this._measureGoalThumb}
+                    renderToHardwareTextureAndroid={true}
+                    style={[
+                        {backgroundColor: thumbTintColor},
+                        mainStyles.thumb, mainStyles.goalThumb, goalThumbStyle, goalThumbMarginLeftStyle,
+                        {
+                            transform: [
+                                {
+                                    translateX: new Animated.Value(this._getThumbCenter(this.props.goal)).interpolate({
+                                        inputRange: [0, containerSize.width || 200],
+                                        outputRange: [0, containerSize.width || 200],
+                                        extrapolate: 'clamp',
+                                    })
+                                },
+                                { translateY: 0},
+                            ],
+                            ...valueVisibleStyle
+                        }
+                    ]}
+                />}
                 <Animated.View
                     onLayout={this._measureThumb}
                     renderToHardwareTextureAndroid={true}
                     style={[
                         {backgroundColor: thumbTintColor},
-                        mainStyles.thumb, thumbStyle, thumbMarginLeftStyle,
+                        mainStyles.thumb,
+                        {
+                            position: 'absolute',
+                            width: THUMB_SIZE,
+                            height: THUMB_SIZE,
+                            borderRadius: THUMB_SIZE / 2,
+                        },
+                        thumbStyle,
+                        isMoving && {
+                            backgroundColor: 'transparent',
+                            shadowColor: 'transparent',
+                            elevation: 0,
+                            borderWidth: 0,
+                        },
+                        thumbMarginLeftStyle,
                         {
                             transform: [
                                 { translateX: translate},
@@ -351,7 +447,38 @@ export default class Slider extends PureComponent {
                     ]}
                 >
                     {this._renderThumbImage()}
+                    <View style={mainStyles.thumbTextContainer}>
+                        {showThumbValue && <Text style={[mainStyles.thumbText]}>{currentValue}</Text>}
+                    </View>
                 </Animated.View>
+                {(isMoving) && <Animated.View
+                    onLayout={this._measureFloatThumb}
+                    renderToHardwareTextureAndroid={true}
+                    style={[
+                        { backgroundColor: thumbTintColor },
+                        mainStyles.thumb,
+                        {
+                            position: 'absolute',
+                            width: THUMB_SIZE,
+                            height: THUMB_SIZE,
+                            borderRadius: THUMB_SIZE / 2,
+                        },
+                        thumbFloatStyle,
+                        floatThumbMarginLeftStyle,
+                        {
+                            transform: [
+                                { translateX: translate},
+                                { translateY: floatThumbOffset},
+                            ],
+                            ...valueVisibleStyle
+                        }
+                    ]}
+                >
+                    {this._renderThumbImage()}
+                    <View style={mainStyles.thumbTextContainer}>
+                        {showThumbValue && <Text style={[mainStyles.thumbText]}>{currentValue}</Text>}
+                    </View>
+                </Animated.View>}
                 <PanGestureHandler
                     onGestureEvent={this._onGestureEvent}
                     onHandlerStateChange={this._onHandlerStateChange}>
@@ -389,6 +516,7 @@ export default class Slider extends PureComponent {
             return;
         }
         this.isMoving = true;
+        this.setState(state => ({ ...state, isMoving: true}));
 
         var translation = this.props.vertical ? -translationY : translationX;
         var offset = this._lastOffsetX + translation;
@@ -414,6 +542,7 @@ export default class Slider extends PureComponent {
         }
 
         this.isMoving = false;
+        this.setState(state => ({ ...state, isMoving: false}));
 
         this._lastOffsetX += translationX;
         if (this._lastOffsetX < 0) {
@@ -443,6 +572,14 @@ export default class Slider extends PureComponent {
         this._handleMeasure('thumbSize', x);
     };
 
+    _measureGoalThumb = (x: Object) => {
+        this._handleMeasure('goalThumbSize', x);
+    };
+
+    _measureFloatThumb = (x: Object) => {
+        this._handleMeasure('floatThumbSize', x);
+    };
+
     _handleMeasure = (name: string, x: Object) => {
         var {
             width,
@@ -460,17 +597,20 @@ export default class Slider extends PureComponent {
         }
         this[storeName] = size;
 
-        if (this._containerSize && this._trackSize && this._thumbSize) {
-            this.setState({
+        if (this._containerSize && this._trackSize && this._thumbSize && this[storeName] ) {
+            this.setState(state => ({
+                ...state,
                 containerSize: this._containerSize,
                 trackSize: this._trackSize,
                 thumbSize: this._thumbSize,
+                [name]: this[storeName],
                 allMeasured: true,
-            }, () => {
+            }), () => {
                 var offset = this._getThumbCenter(this.props.value);
                 this._translateX.setOffset(this.props.vertical ? this.state.containerSize.width - offset : offset);
                 this._translateX.setValue(0);
                 this._lastOffsetX = offset;
+                this._fireChangeEvent('onReady');
             });
         }
     };
@@ -511,6 +651,10 @@ export default class Slider extends PureComponent {
 
     _setCurrentValue = (value: number) => {
         this.state.value.setValue(value);
+        this.setState(state => ({
+            ...state,
+            currentValue: this.props.thumbValueFormatter ? this.props.thumbValueFormatter(value) : value,
+        }));
     };
 
     _setCurrentValueAnimated = (value: number) => {
@@ -601,6 +745,20 @@ var defaultStyles = StyleSheet.create({
         width: THUMB_SIZE,
         height: THUMB_SIZE,
         borderRadius: THUMB_SIZE / 2,
+    },
+    goalThumb: {
+        height: 10,
+        width: 1,
+    },
+    thumbTextContainer: {
+        justifyContent: 'center',
+        alignContent: 'center',
+        width: '100%',
+        height: '100%',
+    },
+    thumbText: {
+        fontSize: 12,
+        textAlign: 'center',
     },
     touchArea: {
         position: 'absolute',
