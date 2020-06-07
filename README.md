@@ -96,12 +96,6 @@ In some use case e.g. "tension rod", it's more convenient to use method instead 
 
 <img src="https://raw.githubusercontent.com/flyskywhy/react-native-smooth-slider/master/Screenshots/vertical_tension_rod.png" width="75">
 
-## Sponsor
-
-Alipay: flyskywhy@gmail.com
-
-ETH: 0xd02fa2738dcbba988904b5a9ef123f7a957dbb3e
-
 
 ---
 
