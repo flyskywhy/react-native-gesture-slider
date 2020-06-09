@@ -10,6 +10,10 @@ A react-native-gesture-handler smoothed `<Slider />` , also support trackImage a
 <img src="https://raw.githubusercontent.com/flyskywhy/react-native-smooth-slider/master/Screenshots/basic@2x.png" width="375">
 <img src="https://raw.githubusercontent.com/flyskywhy/react-native-smooth-slider/master/Screenshots/basic_android_xxhdpi.png" width="360">
 
+#### Custom Slider [View Code](https://github.com/Eazybee/react-native-smooth-slider/blob/master/Example/MyCustomExample.js)
+<img src="https://media1.giphy.com/media/H4KdrH1MxChrsWgZMv/giphy.webp">
+ 
+
 It is a drop-in replacement for [Slider](http://facebook.github.io/react-native/docs/slider.html).
 
 ## Install
