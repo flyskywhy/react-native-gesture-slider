@@ -218,19 +218,9 @@ export default class Slider extends PureComponent {
         goalThumbStyle: ViewPropTypes.style,
 
         /**
-         * The style applied to the floating thumb.
-         */
-        thumbFloatStyle: ViewPropTypes.style,
-
-        /**
          * The indicates whether to show or not show the curent value of the slider on the thumb
          */
         showThumbValue: PropTypes.bool,
-
-        /**
-         * This is the vertical offset of the floating thumb
-         */
-        floatThumbOffset: PropTypes.number,
     };
 
     static defaultProps = {
@@ -248,7 +238,6 @@ export default class Slider extends PureComponent {
         vertical: false,
         moveVelocityThreshold: 2000,
         animationType: 'timing',
-        floatThumbOffset: -35,
     };
 
     state = {
@@ -274,8 +263,6 @@ export default class Slider extends PureComponent {
         },
         allMeasured: false,
         value: new Animated.Value(this.props.value),
-        currentValue: this.props.thumbValueFormatter ? this.props.thumbValueFormatter(this.props.value) : this.props.value,
-        isMoving: false,
     };
 
     componentWillReceiveProps(nextProps) {
@@ -320,6 +307,7 @@ export default class Slider extends PureComponent {
             showThumbValue,
             thumbFloatStyle,
             floatThumbOffset,
+            thumbValueFormatter,
             ...other
         } = this.props;
 
@@ -448,37 +436,10 @@ export default class Slider extends PureComponent {
                 >
                     {this._renderThumbImage()}
                     <View style={mainStyles.thumbTextContainer}>
-                        {showThumbValue && <Text style={[mainStyles.thumbText]}>{currentValue}</Text>}
+                        {showThumbValue && <Text style={[mainStyles.thumbText]}>
+                            { thumbValueFormatter ? thumbValueFormatter(this._getCurrentValue()) : this._getCurrentValue()}</Text>}
                     </View>
                 </Animated.View>
-                {(isMoving) && <Animated.View
-                    onLayout={this._measureFloatThumb}
-                    renderToHardwareTextureAndroid={true}
-                    style={[
-                        { backgroundColor: thumbTintColor },
-                        mainStyles.thumb,
-                        {
-                            position: 'absolute',
-                            width: THUMB_SIZE,
-                            height: THUMB_SIZE,
-                            borderRadius: THUMB_SIZE / 2,
-                        },
-                        thumbFloatStyle,
-                        floatThumbMarginLeftStyle,
-                        {
-                            transform: [
-                                { translateX: translate},
-                                { translateY: floatThumbOffset},
-                            ],
-                            ...valueVisibleStyle
-                        }
-                    ]}
-                >
-                    {this._renderThumbImage()}
-                    <View style={mainStyles.thumbTextContainer}>
-                        {showThumbValue && <Text style={[mainStyles.thumbText]}>{currentValue}</Text>}
-                    </View>
-                </Animated.View>}
                 <PanGestureHandler
                     onGestureEvent={this._onGestureEvent}
                     onHandlerStateChange={this._onHandlerStateChange}>
@@ -516,7 +477,6 @@ export default class Slider extends PureComponent {
             return;
         }
         this.isMoving = true;
-        this.setState(state => ({ ...state, isMoving: true}));
 
         var translation = this.props.vertical ? -translationY : translationX;
         var offset = this._lastOffsetX + translation;
@@ -542,7 +502,6 @@ export default class Slider extends PureComponent {
         }
 
         this.isMoving = false;
-        this.setState(state => ({ ...state, isMoving: false}));
 
         this._lastOffsetX += translationX;
         if (this._lastOffsetX < 0) {
@@ -651,10 +610,6 @@ export default class Slider extends PureComponent {
 
     _setCurrentValue = (value: number) => {
         this.state.value.setValue(value);
-        this.setState(state => ({
-            ...state,
-            currentValue: this.props.thumbValueFormatter ? this.props.thumbValueFormatter(value) : value,
-        }));
     };
 
     _setCurrentValueAnimated = (value: number) => {
