@@ -353,8 +353,8 @@ export default class Slider extends PureComponent {
                     {this._renderThumbImage()}
                 </Animated.View>
                 <PanGestureHandler
-                    onGestureEvent={this._onGestureEvent}
-                    onHandlerStateChange={this._onHandlerStateChange}>
+                    onGestureEvent={this.props.disabled ? undefined : this._onGestureEvent}
+                    onHandlerStateChange={this.props.disabled ? undefined : this._onHandlerStateChange}>
                     <Animated.View
                         renderToHardwareTextureAndroid={true}
                         style={[defaultStyles.touchArea, touchOverflowStyle]}
