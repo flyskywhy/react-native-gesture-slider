@@ -83,10 +83,9 @@ trackImage            | [source](http://facebook.github.io/react-native/docs/ima
 thumbStyle            | [style](http://facebook.github.io/react-native/docs/view.html#style)    | Yes      |                           | The style applied to the thumb
 thumbImage            | [source](http://facebook.github.io/react-native/docs/image.html#source)    | Yes      |                           | Sets an image for the thumb.
 vertical              | bool     | Yes      | false                     | Set this to true to be a vertical slider.
-useNativeDriver       | bool     | Yes      | false                     | The useNativeDriver parameter in Animated used by react-native-gesture-handler when the user change the value. Default value is false, because some Android phone [PanGestureHandler causes Animated Value to jump when using native driver](https://github.com/software-mansion/react-native-gesture-handler/issues/984)
-animateTransitions    | bool     | Yes      | false                     | Set to true to animate values with default 'timing' animation type when value in next props is different.
-animationType         | string   | Yes      | 'timing'                  | Custom Animation type when value in next props is different. 'spring' or 'timing'.
-animationConfig       | object   | Yes      | undefined                 | Used to configure the animation parameters when value in next props is different. These are the same parameters in the [Animated library](https://facebook.github.io/react-native/docs/animations.html).
+animateTransitions    | bool     | Yes      | false                     | Set to true if you want to use the default 'spring' animation
+animationType         | string   | Yes      | 'timing'                  | Set to 'spring' or 'timing' to use one of those two types of animations with the default [animation properties](https://facebook.github.io/react-native/docs/animations.html).
+animationConfig       | object   | Yes      | undefined                 | Used to configure the animation parameters.  These are the same parameters in the [Animated library](https://facebook.github.io/react-native/docs/animations.html).
 
 ## Methods
 

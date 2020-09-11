@@ -49,7 +49,7 @@ export default class Slider extends PureComponent {
                     translationX: this._translateX,
                 },
             }], {
-                useNativeDriver: props.useNativeDriver,
+                useNativeDriver: true,
                 listener: this._handlePanResponderMove,
             }
         );
@@ -187,23 +187,17 @@ export default class Slider extends PureComponent {
         vertical: PropTypes.bool,
 
         /**
-         * The useNativeDriver parameter in Animated used by react-native-gesture-handler when the user change the value.
-         * Default value is false, because some Android phone [PanGestureHandler causes Animated Value to jump when using native driver](https://github.com/software-mansion/react-native-gesture-handler/issues/984)
-         */
-        useNativeDriver: PropTypes.bool,
-
-        /**
-         * Set to true to animate values with default 'timing' animation type when value in next props is different.
+         * Set to true to animate values with default 'timing' animation type
          */
         animateTransitions: PropTypes.bool,
 
         /**
-         * Custom Animation type when value in next props is different. 'spring' or 'timing'.
+         * Custom Animation type. 'spring' or 'timing'.
          */
         animationType: PropTypes.oneOf(['spring', 'timing']),
 
         /**
-         * Used to configure the animation parameters when value in next props is different. These are the same parameters in the Animated library.
+         * Used to configure the animation parameters.  These are the same parameters in the Animated library.
          */
         animationConfig: PropTypes.object,
     };
@@ -222,7 +216,6 @@ export default class Slider extends PureComponent {
         },
         vertical: false,
         moveVelocityThreshold: 2000,
-        useNativeDriver: false,
         animationType: 'timing'
     };
 
