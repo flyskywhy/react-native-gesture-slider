@@ -14,11 +14,20 @@ It is a drop-in replacement for [Slider](http://facebook.github.io/react-native/
 
 ## Install
 
+For RN >= 0.60
+```shell
+npm i --save react-native-smooth-slider react-native-gesture-handler
+```
+
+For RN < 0.60
+```shell
+npm i --save react-native-smooth-slider@1.2.x react-native-gesture-handler@1.2.2
+```
 ```shell
 npm i --save react-native-smooth-slider
 ```
 
-And need install react-native-gesture-handler (1.1.0+ e.g. 1.2.2 for RN 0.57.2+ , or latest for RN 0.60.0+) by yourself.
+And be aware of https://github.com/software-mansion/react-native-gesture-handler/issues/1164 if you use react-native-web and want to slide on web.
 
 ## Usage
 

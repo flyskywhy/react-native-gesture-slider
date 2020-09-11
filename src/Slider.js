@@ -243,11 +243,9 @@ export default class Slider extends PureComponent {
         value: new Animated.Value(this.props.value),
     };
 
-    componentWillReceiveProps(nextProps) {
-        var newValue = nextProps.value;
-
-        if (this.props.value !== newValue) {
-            this.setValue(newValue);
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.value !== prevProps.value) {
+            this.setValue(this.props.value);
         }
     }
 
