@@ -23,9 +23,6 @@ For RN < 0.60
 ```shell
 npm i --save react-native-smooth-slider@1.2.x react-native-gesture-handler@1.2.2
 ```
-```shell
-npm i --save react-native-smooth-slider
-```
 
 And be aware of https://github.com/software-mansion/react-native-gesture-handler/issues/1164 if you use react-native-web and want to slide on web.
 
