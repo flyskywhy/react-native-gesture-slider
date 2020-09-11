@@ -43,6 +43,7 @@ class SliderExample extends React.Component {
       <View style={styles.container}>
         <Slider
           value={this.state.value}
+          useNativeDriver={true}
           onValueChange={value => this.setState({ value })}
         />
         <Text>
