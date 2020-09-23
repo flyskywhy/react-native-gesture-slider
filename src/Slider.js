@@ -64,7 +64,9 @@ export default class Slider extends PureComponent {
             // This synthetic event is reused for performance reasons, so save it first
             var translationX = this.props.vertical ? -event.nativeEvent.translationY : event.nativeEvent.translationX;
             this._handlePanResponderEnd(translationX);
-        } else if (event.nativeEvent.state === State.FAILED && event.nativeEvent.oldState === State.BEGAN) {
+        } else if (event.nativeEvent.oldState === State.BEGAN &&
+            (event.nativeEvent.state === State.FAILED ||
+            event.nativeEvent.state === State.END)) {
             // Just tap not move on the slider, will comes here
             this._handlePanResponderEnd(0);
         }
