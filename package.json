@@ -18,13 +18,16 @@
       "url": "https://github.com/flyskywhy"
     }
   ],
-  "funding": [{
-    "type": "individual",
-    "url": "https://Alipay/flyskywhy@gmail.com "
-  },{
-    "type": "individual",
-    "url": "https://EthAddress/0xd02fa2738dcbba988904b5a9ef123f7a957dbb3e"
-  }],
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://Alipay/flyskywhy@gmail.com "
+    },
+    {
+      "type": "individual",
+      "url": "https://EthAddress/0xd02fa2738dcbba988904b5a9ef123f7a957dbb3e"
+    }
+  ],
   "keywords": [
     "react-component",
     "react-native",
@@ -44,6 +47,7 @@
     "url": "https://github.com/flyskywhy/react-native-smooth-slider.git"
   },
   "peerDependencies": {
+    "deprecated-react-native-prop-types": "^2.3.0",
     "react-native-gesture-handler": ">=1.1.0"
   },
   "dependencies": {
