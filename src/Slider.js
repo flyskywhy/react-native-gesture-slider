@@ -11,7 +11,7 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
-import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import {ImagePropTypes, ViewPropTypes} from 'deprecated-react-native-prop-types';
 
 import {
     PanGestureHandler,
@@ -171,7 +171,7 @@ export default class Slider extends PureComponent {
         /**
          * Sets an image for the track.
          */
-        trackImage: Image.propTypes.source,
+        trackImage: ImagePropTypes.source,
 
         /**
          * The style applied to the thumb.
@@ -181,7 +181,7 @@ export default class Slider extends PureComponent {
         /**
          * Sets an image for the thumb.
          */
-        thumbImage: Image.propTypes.source,
+        thumbImage: ImagePropTypes.source,
 
         /**
          * Set this to true to be a vertical slider.
