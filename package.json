@@ -47,10 +47,10 @@
     "url": "https://github.com/flyskywhy/react-native-smooth-slider.git"
   },
   "peerDependencies": {
-    "deprecated-react-native-prop-types": "^2.3.0",
     "react-native-gesture-handler": ">=1.1.0"
   },
   "dependencies": {
+    "deprecated-react-native-prop-types": "^4.0.0",
     "prop-types": "^15.5.6"
   },
   "devDependencies": {
