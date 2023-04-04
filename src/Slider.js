@@ -451,6 +451,19 @@ export default class Slider extends PureComponent {
     };
 
     _handleMeasure = (name: string, x: Object) => {
+        // (on my Android 12?) with some thumbSize.width measured by onLayout,
+        // after this.setState({thumbSize}) below then re-render since
+        // setState, will measured out a tiny different thumbSize.width,
+        // thus if no return here, will loop setState and onLayout infinitely
+        // and cause this._lastOffsetX change frequently finally cause slider
+        // jump here and there when user move
+        // if (this.state.allMeasured) {
+        //     return;
+        // }
+        // but above fix will cause issue when indeed need onLayout e.g. user
+        // change phone orientation, so comment above but use
+        // below `Math.abs(width - currentSize.width) < 1` instead
+
         var {
             width,
             height
@@ -462,7 +475,7 @@ export default class Slider extends PureComponent {
 
         var storeName = `_${name}`;
         var currentSize = this[storeName];
-        if (currentSize && width === currentSize.width && height === currentSize.height) {
+        if (currentSize && Math.abs(width - currentSize.width) < 1 && Math.abs(height - currentSize.height) < 1) {
             return;
         }
         this[storeName] = size;
