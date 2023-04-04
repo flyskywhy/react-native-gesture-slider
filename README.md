@@ -31,7 +31,14 @@ And be aware of https://github.com/software-mansion/react-native-gesture-handler
 ```jsx
 import React from "react";
 import Slider from "react-native-smooth-slider";
-import { AppRegistry, StyleSheet, View, Text } from "react-native";
+import {AppRegistry, StyleSheet, Text} from "react-native";
+
+// if react-native-gesture-handler@1.x, no need <GestureHandlerRootView />
+// but just <View />, ref to
+// https://docs.swmansion.com/react-native-gesture-handler/docs/guides/migrating-off-rnghenabledroot/
+// You should put <GestureHandlerRootView /> in your root component,
+// example below is just playing the role of a root component
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 class SliderExample extends React.Component {
   state = {
@@ -40,7 +47,7 @@ class SliderExample extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <GestureHandlerRootView style={styles.container}>
         <Slider
           value={this.state.value}
           useNativeDriver={true}
@@ -49,7 +56,7 @@ class SliderExample extends React.Component {
         <Text>
           Value: {this.state.value}
         </Text>
-      </View>
+      </GestureHandlerRootView>
     );
   }
 }
